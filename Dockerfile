@@ -14,13 +14,13 @@ RUN apt-get -yqq upgrade
 # Install Ansible
 # ----------------
 RUN apt-get install -yqq software-properties-common
-RUN apt-add-repository --yes --update ppa:ansible/ansible
-RUN apt-get install -yqq ansible
+RUN apt-get install -yqq sshpass openssh-client
+RUN pip3 install ansible
 
 # ----------------
 # Install things to support ansible
 # ----------------
-RUN apt-get install -yqq sshpass openssh-client
+RUN mkdir -pv /etc/ansible/
 RUN echo 'localhost' > /etc/ansible/hosts
 
 # ----------------
