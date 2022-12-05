@@ -29,6 +29,11 @@ RUN echo 'localhost' > /etc/ansible/hosts
 RUN apt-get install -yqq rsync
 
 # ----------------
+# Save some space
+# ----------------
+RUN rm -rfv /var/lib/apt/lists/*
+
+# ----------------
 # Default command: display Ansible version
 # ----------------
 CMD [ "ansible", "--version" ]
