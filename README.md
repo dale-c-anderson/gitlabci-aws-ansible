@@ -1,6 +1,8 @@
 # gitlabci-aws-ansible
 AWS + Ansible command line tools in a container image.
 
+Now with Terraform, too!
+
 Originally built for use in GitLab CI jobs.
 
 
