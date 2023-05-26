@@ -18,7 +18,7 @@ docker run --rm -it \
    -e SSH_AUTH_SOCK=/ssh-agent \
    -v ${SSH_AUTH_SOCK}:/ssh-agent \
    -e ANSIBLE_REMOTE_USER=$(whoami) \
-   dandersonacro/gitlabci-aws-ansible:latest \
+   dandersonacro/gitlabci-aws-ansible \
    ansible-playbook playbooks/my-book.yml -i inventories/staging --limit 'foobar*' --check
 ```
 * Line 4 mounts your current dir to `/root` inside the container.
@@ -27,3 +27,19 @@ docker run --rm -it \
 * Line 9 tells Ansible to use your local username for connections to remote hosts. If omitted, Ansible will try and connect to remote hosts `root`. Adjust this to something else if needed.
 * Line 10 is the image to run. If anything is missing from this image, submit a pull request here.
 * Everything on line 11 is what you’d normally execute to run a playbook if you had installed Ansible locally.
+
+
+To use this permanently instead of installing ansible, just create a shell function in your `~/.bashrc` or `~/.zshrc`:
+```bash
+function ansible-playbook {
+   docker run --rm -it \
+      -v "$(pwd)":/root \
+      -w /root \
+      -v $HOME/.ssh:/root/.ssh:ro \
+      -e SSH_AUTH_SOCK=/ssh-agent \
+      -v ${SSH_AUTH_SOCK}:/ssh-agent \
+      -e ANSIBLE_REMOTE_USER=$(whoami) \
+      dandersonacro/gitlabci-aws-ansible \
+      ansible-playbook "$@"
+}
+```
