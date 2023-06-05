@@ -25,7 +25,7 @@ RUN apt-get update \
 # ----------------
 # Install Ansible
 # ----------------
-RUN python3 -m pip install ansible \
+RUN python3 -m pip install ansible boto3 botocore \
  && mkdir -pv /etc/ansible/ \
  && echo 'localhost' > /etc/ansible/hosts
 
