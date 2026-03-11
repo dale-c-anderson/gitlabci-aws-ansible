@@ -1,41 +1,34 @@
-# ===============================================
-# AWS CLI v2 + Ansible + Terraform
-# For deploying and maintaining AWS infrastructure from Gitlab CI pipelines
-# ===============================================
-FROM dandersonacro/gitlabci-awscli:latest
-MAINTAINER Dale Anderson (http://www.acromedia.com/)
-
+FROM ghcr.io/dale-c-anderson/gitlabci-awscli:v2026.03.11
+LABEL maintainer="Dale Anderson (http://www.acromedia.com/)"
+LABEL org.opencontainers.image.title="AWS CLI v2 + Ansible + Terraform"
+LABEL org.opencontainers.image.description="For deploying and maintaining AWS infrastructure from Gitlab CI pipelines"
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
 # ----------------
-# Get everything up to date
+# Install pip and other dependencies
 # ----------------
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
-ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
-    && apt-get -y upgrade \
     && apt-get install -y --no-install-recommends \
         python3-pip \
-        locales \
-        software-properties-common \
-        sshpass \
-        openssh-client \
-        rsync \
     && rm -rfv /var/lib/apt/lists/*
 
 # ----------------
 # Install Ansible
 # ----------------
-RUN python3 -m pip install ansible boto3 botocore \
+RUN python3 -m pip install --break-system-packages ansible boto3 botocore 'botocore[crt]' \
  && mkdir -pv /etc/ansible/ \
- && echo 'localhost' > /etc/ansible/hosts
+ && echo 'localhost' > /etc/ansible/hosts \
+ && python3 -m pip cache purge
 
 # ----------------
 # Install Terraform
 # ----------------
-RUN wget --quiet https://releases.hashicorp.com/terraform/1.4.6/terraform_1.4.6_linux_amd64.zip \
-  && unzip -qq terraform_1.4.6_linux_amd64.zip \
+ARG TERRAFORM_VERSION=1.14.7
+RUN wget --quiet https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+  && unzip -qq terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
   && mv terraform /usr/local/bin/ \
-  && rm terraform_1.4.6_linux_amd64.zip
+  && rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
 # ----------------
 # Default command: Display versions
