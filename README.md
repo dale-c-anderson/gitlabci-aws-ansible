@@ -20,7 +20,7 @@ docker run --rm -it \
    -e SSH_AUTH_SOCK=/ssh-agent \
    -v ${SSH_AUTH_SOCK}:/ssh-agent \
    -e ANSIBLE_REMOTE_USER=$(whoami) \
-   dandersonacro/gitlabci-aws-ansible \
+   ghcr.io/dale-c-anderson/gitlabci-aws-ansible \
    ansible-playbook playbooks/my-book.yml -i inventories/staging --limit 'foobar*' --check
 ```
 * Line 4 mounts your current dir to `/root` inside the container.
@@ -41,7 +41,7 @@ function ansible-playbook {
       -e SSH_AUTH_SOCK=/ssh-agent \
       -v ${SSH_AUTH_SOCK}:/ssh-agent \
       -e ANSIBLE_REMOTE_USER=$(whoami) \
-      dandersonacro/gitlabci-aws-ansible \
+      ghcr.io/dale-c-anderson/gitlabci-aws-ansible \
       ansible-playbook "$@"
 }
 ```
